@@ -10,7 +10,7 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_CONTACT,
-  FILTER_CONTACT,
+  FILTER_CONTACTS,
   CLEAR_FILTER
 } from '../types';
 
@@ -84,7 +84,7 @@ const ContactState = props => {
   // Filter contacts
   const filterContacts = text => {
     dispatch({
-      type: FILTER_CONTACT,
+      type: FILTER_CONTACTS,
       payload: text
     });
   };
