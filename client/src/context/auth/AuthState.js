@@ -2,6 +2,8 @@ import React, { useReducer } from 'react';
 
 import axios from 'axios';
 
+import setAuthToken from '../../utils/setAuthToken';
+
 import authReducer from './authReducer';
 import AuthContext from './authContext';
 
@@ -28,6 +30,22 @@ const AuthState = props => {
   const [state, disptach] = useReducer(authReducer, initialState);
 
   // Load user
+  const loadUser = async () => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    try {
+      const res = await axios.get('/api/auth');
+
+      disptach({
+        type: USER_LOADED,
+        payload: res.data
+      });
+    } catch (err) {
+      disptach({ type: AUTH_ERROR });
+    }
+  };
 
   // Register user
   const register = async user => {
@@ -44,6 +62,8 @@ const AuthState = props => {
         type: REGISTER_SUCCESS,
         payload: res.data
       });
+
+      loadUser();
     } catch (err) {
       console.error(err.response.config.data);
       disptach({
@@ -69,7 +89,8 @@ const AuthState = props => {
         error: state.error,
         user: state.user,
         register,
-        clearErrors
+        clearErrors,
+        loadUser
       }}
     >
       {props.children}
