@@ -70,19 +70,58 @@ const ContactState = props => {
   };
 
   // Delete contact
-  const deleteContact = id => {
-    dispatch({
-      type: DELETE_CONTACT,
-      payload: id
-    });
+  const deleteContact = async id => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/text',
+        'x-auth-token': localStorage.getItem('token')
+      }
+    };
+
+    try {
+      const res = await axios.delete(`/api/contacts/${id}`, config);
+
+      console.log(res.data);
+
+      dispatch({
+        type: DELETE_CONTACT,
+        payload: id
+      });
+    } catch (err) {
+      dispatch({
+        type: CONTACT_ERROR,
+        payload: err.response.msg
+      });
+    }
   };
 
   // Update contact
-  const updateContact = contact => {
-    dispatch({
-      type: UPDATE_CONTACT,
-      payload: contact
-    });
+  const updateContact = async contact => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': localStorage.getItem('token')
+      }
+    };
+
+    try {
+      const user = await axios.put(
+        `/api/contacts/${contact._id}`,
+        contact,
+        config
+      );
+      console.log(user.data);
+
+      dispatch({
+        type: UPDATE_CONTACT,
+        payload: user.data
+      });
+    } catch (err) {
+      dispatch({
+        type: CONTACT_ERROR,
+        payload: err.response.msg
+      });
+    }
   };
 
   // Set current contact
