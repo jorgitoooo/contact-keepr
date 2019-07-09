@@ -7,7 +7,8 @@ import {
   UPDATE_CONTACT,
   FILTER_CONTACTS,
   CLEAR_FILTER,
-  CONTACT_ERROR
+  CONTACT_ERROR,
+  CLEAR_CONTACTS
 } from '../types';
 
 export default (state, action) => {
@@ -20,10 +21,18 @@ export default (state, action) => {
         contacts: [...state.contacts, payload],
         loading: false
       };
+    case CLEAR_CONTACTS:
+      return {
+        ...state,
+        contacts: null,
+        filtered: null,
+        current: null,
+        error: null
+      };
     case GET_CONTACTS:
       return {
         ...state,
-        contacts: [...state.contacts, ...payload],
+        contacts: payload,
         loading: false
       };
     case DELETE_CONTACT:
@@ -35,22 +44,19 @@ export default (state, action) => {
     case SET_CURRENT:
       return {
         ...state,
-        current: payload,
-        loading: false
+        current: payload
       };
     case CLEAR_CURRENT:
       return {
         ...state,
-        current: null,
-        loading: false
+        current: null
       };
     case UPDATE_CONTACT:
       return {
         ...state,
         contacts: state.contacts.map(contact =>
           contact.id === payload.id ? payload : contact
-        ),
-        loading: false
+        )
       };
     case FILTER_CONTACTS:
       return {
@@ -58,20 +64,17 @@ export default (state, action) => {
         filtered: state.contacts.filter(contact => {
           const regex = RegExp(`${payload}`, 'gi');
           return contact.name.match(regex) || contact.email.match(regex);
-        }),
-        loading: false
+        })
       };
     case CLEAR_FILTER:
       return {
         ...state,
-        filtered: null,
-        loading: false
+        filtered: null
       };
     case CONTACT_ERROR:
       return {
         ...state,
-        error: payload,
-        loading: false
+        error: payload
       };
     default:
       return state;

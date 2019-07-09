@@ -18,7 +18,6 @@ router.get('/', authMiddleware, async (req, res) => {
     });
     res.json({ contacts });
   } catch (err) {
-    console.error(err.message);
     res.status(500).json({ msg: 'Server error' });
   }
 });
@@ -58,7 +57,6 @@ router.post(
 
       res.json(contact);
     } catch (err) {
-      console.error(err.message);
       res.status(500).send('Server error');
     }
   }
@@ -94,7 +92,6 @@ router.put('/:id', authMiddleware, async (req, res) => {
 
     res.json(contact);
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error');
   }
 });
@@ -116,7 +113,6 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
     res.send('Contact removed');
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error');
   }
 });

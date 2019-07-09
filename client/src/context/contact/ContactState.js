@@ -20,7 +20,7 @@ import {
 
 const ContactState = props => {
   const initialState = {
-    contacts: [],
+    contacts: null,
     current: null,
     filtered: null,
     error: null
@@ -32,9 +32,10 @@ const ContactState = props => {
   const getContacts = async () => {
     try {
       const users = await axios.get('/api/contacts');
+
       dispatch({
         type: GET_CONTACTS,
-        payload: users.data
+        payload: users.data.contacts
       });
     } catch (err) {
       dispatch({
@@ -43,6 +44,9 @@ const ContactState = props => {
       });
     }
   };
+
+  // Clear contacts
+  const clearContacts = () => dispatch({ type: CLEAR_CONTACTS });
 
   // Add contact
   const addContact = async contact => {
@@ -112,6 +116,7 @@ const ContactState = props => {
         error: state.error,
         addContact,
         getContacts,
+        clearContacts,
         deleteContact,
         setCurrent,
         updateContact,
