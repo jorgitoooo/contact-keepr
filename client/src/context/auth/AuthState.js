@@ -65,7 +65,6 @@ const AuthState = props => {
 
       loadUser();
     } catch (err) {
-      console.error(err.response.config.data);
       disptach({
         type: REGISTER_FAIL,
         payload: err.response.data.msg
@@ -74,8 +73,32 @@ const AuthState = props => {
   };
 
   // Login user
+  const login = async user => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.post('/api/auth', user, config);
+
+      disptach({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      });
+
+      loadUser();
+    } catch (err) {
+      disptach({
+        type: LOGIN_FAIL,
+        payload: err.response.data.msg
+      });
+    }
+  };
 
   // Logout user
+  const logout = () => disptach({ type: LOGOUT });
 
   // Clear errors
   const clearErrors = () => disptach({ type: CLEAR_ERRORS });
@@ -90,7 +113,9 @@ const AuthState = props => {
         user: state.user,
         register,
         clearErrors,
-        loadUser
+        loadUser,
+        login,
+        logout
       }}
     >
       {props.children}

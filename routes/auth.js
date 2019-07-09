@@ -18,7 +18,6 @@ router.get('/', authMiddleware, async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error');
   }
 });
@@ -44,13 +43,11 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res
-          .status(400)
-          .json({ msg: 'User with email ' + email + ' does not exist' });
+        return res.status(400).json({ msg: 'User does not exist' });
       }
 
       if (!bcrypt.compareSync(password, user.password)) {
-        return res.status(400).json({ msg: 'Incorrect password' });
+        return res.status(400).json({ msg: 'Invalid password' });
       }
 
       const payload = {
@@ -71,7 +68,6 @@ router.post(
         }
       );
     } catch (err) {
-      console.error(err.message);
       res.status(500).send('Server error');
     }
   }
